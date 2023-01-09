@@ -71,6 +71,7 @@ public class Game extends javax.swing.JFrame {
                         if (me.getButton() == me.BUTTON1)
                         {
                             if (pnlarr[kpi][kpj].isVisited()) return;
+                            if (check_if_won()) JOptionPane.showMessageDialog(null, "Congrats, you won!", "Game Over", JOptionPane.PLAIN_MESSAGE);
                             if (!pnlarr[kpi][kpj].is_bomb())
                                 panelClickedAtActionPerformed(kpi, kpj);
                             else
@@ -275,6 +276,7 @@ public class Game extends javax.swing.JFrame {
         pnlarr[i][j].setBorder(BorderFactory.createLoweredBevelBorder());
         pnlarr[i][j].getComponent(0).setVisible(true);
         pnlarr[i][j].setVisited(true);
+        if (check_if_won()) JOptionPane.showMessageDialog(null, "Congrats, you won!", "Game Over", JOptionPane.PLAIN_MESSAGE);
         if (pnlarr[i][j].getNum() != 0 || pnlarr[i][j].is_bomb())
             return;
         panelClickedAtActionPerformed(i + 1, j);
@@ -308,6 +310,39 @@ public class Game extends javax.swing.JFrame {
                 java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
         unsmileImg = new ImageIcon(newimg);  // transform it back
         ((javax.swing.JLabel)(pnlSmile.getComponent(0))).setIcon(unsmileImg);
+    }
+    
+    private boolean check_if_won()
+    {
+        int n = pnlarr.length;
+        for (int i = 0; i < n; ++i)
+        {
+            for (int j = 0; j < n; ++j)
+            {
+                if (!pnlarr[i][j].isVisited() && !pnlarr[i][j].is_bomb()) return false;
+            }
+        }
+        
+        ImageIcon flagImg = new ImageIcon("flag.png"); // load the image to a imageIcon
+        Image image = flagImg.getImage(); // transform it 
+        Image newimg = image.getScaledInstance(20, 20,
+                java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        flagImg = new ImageIcon(newimg);  // transform it back
+        
+        for (int i = 0; i < n; ++i)
+        {
+            for (int j = 0; j < n; ++j)
+            {
+                if (pnlarr[i][j].is_bomb() && !pnlarr[i][j].isFlagged())
+                {
+                    pnlarr[i][j].getComponent(0).setVisible(true);
+                    ((javax.swing.JLabel)(pnlarr[i][j].getComponent(0))).setIcon(flagImg);
+                    ((javax.swing.JLabel)(pnlarr[i][j].getComponent(0))).setText("");
+                    pnlarr[i][j].setFlagged(true);
+                }
+            }
+        }
+        return true;
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
