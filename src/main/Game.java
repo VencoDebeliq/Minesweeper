@@ -5,14 +5,12 @@
 package main;
 
 import java.awt.Color;
-import java.awt.Image;
+import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Random;
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-
 /**
  *
  * @author Ventsislav Peychev
@@ -25,8 +23,10 @@ public class Game extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         init_size();
+        init_bomb_counter();
         init_arr();
-        smile_panel_init();
+        init_smile_panel();
+        init_timer();
     }
     
     private void init_arr()
@@ -37,20 +37,6 @@ public class Game extends javax.swing.JFrame {
         
         int panelW = jPanel3.getWidth();
         int panelH = jPanel3.getHeight();
-        
-        /* image declaration start */
-        ImageIcon bombImg = new ImageIcon("bomb.png"); // load the image to a imageIcon
-        Image image = bombImg.getImage(); // transform it 
-        Image newimg = image.getScaledInstance(20, 20,
-                java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-        bombImg = new ImageIcon(newimg);  // transform it back
-        
-        ImageIcon flagImg = new ImageIcon("flag.png"); // load the image to a imageIcon
-        image = flagImg.getImage(); // transform it 
-        newimg = image.getScaledInstance(20, 20,
-                java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-        flagImg = new ImageIcon(newimg);  // transform it back
-        /* image declaration end */
         
         for (int i = 0; i < n; ++i)
         {
@@ -64,14 +50,17 @@ public class Game extends javax.swing.JFrame {
                 pnlarr[i][j].add(field);
                 field.setVisible(false);
                 final int kpi = i, kpj = j;
-                final ImageIcon finalFlag = flagImg;
                 pnlarr[i][j].addMouseListener(new MouseAdapter(){
                     public void mousePressed(MouseEvent me)
                     {
                         if (me.getButton() == me.BUTTON1)
                         {
-                            if (pnlarr[kpi][kpj].isVisited()) return;
-                            if (check_if_won()) JOptionPane.showMessageDialog(null, "Congrats, you won!", "Game Over", JOptionPane.PLAIN_MESSAGE);
+                            if (pnlarr[kpi][kpj].isVisited()) 
+                            {
+                                clickSurrounding(kpi, kpj);
+                                return;
+                            }
+                            pnlTimer.start();
                             if (!pnlarr[kpi][kpj].is_bomb())
                                 panelClickedAtActionPerformed(kpi, kpj);
                             else
@@ -86,17 +75,25 @@ public class Game extends javax.swing.JFrame {
                                 pnlarr[kpi][kpj].getComponent(0).setVisible(false);
                                 ((javax.swing.JLabel)(pnlarr[kpi][kpj].getComponent(0))).setText(pnlarr[kpi][kpj].getNum() + "");
                                 pnlarr[kpi][kpj].setFlagged(false);
+                                int c = Integer.parseInt(((javax.swing.JLabel)(pnlBombCount.getComponent(0))).getText()) + 1;
+                                ((javax.swing.JLabel)(pnlBombCount.getComponent(0))).setText(Integer.toString(c));
                                 return;
                             }
                             pnlarr[kpi][kpj].getComponent(0).setVisible(true);
-                            ((javax.swing.JLabel)(pnlarr[kpi][kpj].getComponent(0))).setIcon(finalFlag);
+                            ((javax.swing.JLabel)(pnlarr[kpi][kpj].getComponent(0))).setIcon(Images.FLAG);
                             ((javax.swing.JLabel)(pnlarr[kpi][kpj].getComponent(0))).setText("");
                             pnlarr[kpi][kpj].setFlagged(true);
+                            int c = Integer.parseInt(((javax.swing.JLabel)(pnlBombCount.getComponent(0))).getText()) - 1;
+                            ((javax.swing.JLabel)(pnlBombCount.getComponent(0))).setText(Integer.toString(c));
                         }
                         else if (me.getButton() == me.BUTTON2)
                         {
                             System.out.println("in");
                         }
+                    }
+                    public void mouseReleased(MouseEvent re)
+                    {
+                        unpressUnvisited();
                     }
                 });
             }
@@ -116,7 +113,7 @@ public class Game extends javax.swing.JFrame {
             }
             while (pnlarr[a][b].is_bomb());
             pnlarr[a][b].set_bomb(true);
-            ((javax.swing.JLabel)pnlarr[a][b].getComponent(0)).setIcon(bombImg);
+            ((javax.swing.JLabel)pnlarr[a][b].getComponent(0)).setIcon(Images.BOMB);
         } // setting up bomb fields
         
         for (int i = 0; i < n; ++i)
@@ -140,6 +137,9 @@ public class Game extends javax.swing.JFrame {
                 }
             }
         } // setting up field numbers
+        
+        javax.swing.JLabel lbl = ((javax.swing.JLabel)pnlBombCount.getComponent(0));
+        lbl.setText(Integer.toString(maxMines));
     }
     
     private void init_size()
@@ -156,45 +156,55 @@ public class Game extends javax.swing.JFrame {
         }
     }
     
-    private void smile_panel_init()
+    private void init_smile_panel()
     {
         pnlSmile = new javax.swing.JPanel();
         jPanel2.add(pnlSmile);
         pnlSmile.setBounds((jPanel2.getWidth() - jPanel2.getHeight()) / 2, 5, jPanel2.getHeight() - 5, jPanel2.getHeight() - 10);
         pnlSmile.setBorder(BorderFactory.createRaisedBevelBorder());
         
-        ImageIcon smileImg = new ImageIcon("smiley_face.png"); // load the image to a imageIcon
-        Image image = smileImg.getImage(); // transform it 
-        Image newimg = image.getScaledInstance(50, 48,
-                java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-        smileImg = new ImageIcon(newimg);  // transform it back
-        
-        ImageIcon unsmileImg = new ImageIcon("unsmiley_face.png"); // load the image to a imageIcon
-        image = unsmileImg.getImage(); // transform it 
-        newimg = image.getScaledInstance(50, 48,
-                java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-        unsmileImg = new ImageIcon(newimg);  // transform it back
-        
         javax.swing.JLabel lbl = new javax.swing.JLabel();
         pnlSmile.add(lbl);
-        lbl.setIcon(smileImg);
+        lbl.setIcon(Images.SMILE);
         lbl.setVisible(true);
-        final ImageIcon smile = smileImg;
-        final ImageIcon unsmile = unsmileImg;
         pnlSmile.addMouseListener(new MouseAdapter(){
             public void mousePressed(MouseEvent me1)
             {
                 pnlSmile.setBorder(BorderFactory.createLoweredBevelBorder());
-                ((javax.swing.JLabel)(pnlSmile.getComponent(0))).setIcon(unsmile);
+                ((javax.swing.JLabel)(pnlSmile.getComponent(0))).setIcon(Images.UNSMILE);
                 init_arr();
+                pnlTimer.refresh();
             }
             public void mouseReleased(MouseEvent me2)
             {
                 pnlSmile.setBorder(BorderFactory.createRaisedBevelBorder());
-                ((javax.swing.JLabel)(pnlSmile.getComponent(0))).setIcon(smile);
+                ((javax.swing.JLabel)(pnlSmile.getComponent(0))).setIcon(Images.SMILE);
             }
         });
         
+    }
+    
+    private void init_timer()
+    {
+        pnlTimer = new PanelTimer();
+        jPanel2.add(pnlTimer);
+        pnlTimer.setBounds(jPanel2.getWidth() - jPanel2.getHeight() - 20, 3, jPanel2.getHeight(), jPanel2.getHeight() - 5);
+        pnlTimer.setBackground(Color.pink);
+        pnlTimer.setBorder(BorderFactory.createLineBorder(Color.black));
+        pnlTimer.stop();
+    }
+    
+    private void init_bomb_counter()
+    {
+        pnlBombCount = new javax.swing.JPanel();
+        jPanel2.add(pnlBombCount);
+        pnlBombCount.setBounds(10, 3, jPanel2.getHeight(), jPanel2.getHeight() - 5);
+        pnlBombCount.setBackground(Color.pink);
+        pnlBombCount.setBorder(BorderFactory.createLineBorder(Color.black));
+        javax.swing.JLabel lbl = new javax.swing.JLabel();
+        lbl.setFont(new Font("Times New Roman", Font.BOLD, 50));
+        lbl.setForeground(Color.red);
+        pnlBombCount.add(lbl);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -300,16 +310,123 @@ public class Game extends javax.swing.JFrame {
             {
                 pnlarr[i][j].setVisited(true);
                 if (!pnlarr[i][j].is_bomb()) continue;
-                pnlarr[i][j].getComponent(0).setVisible(true);
+                javax.swing.JLabel lbl = (javax.swing.JLabel)(pnlarr[i][j].getComponent(0));
+                lbl.setIcon(Images.BOMB);
+                lbl.setText("");
+                lbl.setVisible(true);
                 pnlarr[i][j].setBorder(BorderFactory.createLoweredBevelBorder());
             }
         }
-        ImageIcon unsmileImg = new ImageIcon("unsmiley_face.png"); // load the image to a imageIcon
-        Image image = unsmileImg.getImage(); // transform it 
-        Image newimg = image.getScaledInstance(50, 48,
-                java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-        unsmileImg = new ImageIcon(newimg);  // transform it back
-        ((javax.swing.JLabel)(pnlSmile.getComponent(0))).setIcon(unsmileImg);
+        ((javax.swing.JLabel)(pnlSmile.getComponent(0))).setIcon(Images.UNSMILE);
+        pnlTimer.stop();
+    }
+    
+    private void clickSurrounding(int i, int j)
+    {
+        int n = pnlarr.length;
+        
+        int howManyFlagged = 0;
+        if (j < n - 1 && pnlarr[i][j + 1].isFlagged()) howManyFlagged++;
+        if (i < n - 1 && pnlarr[i + 1][j].isFlagged()) howManyFlagged++;
+        if (j < n - 1 && i < n - 1 && pnlarr[i + 1][j + 1].isFlagged()) howManyFlagged++;
+        if (j > 0 && pnlarr[i][j - 1].isFlagged()) howManyFlagged++;
+        if (i > 0 && pnlarr[i - 1][j].isFlagged()) howManyFlagged++;
+        if (j > 0 && i > 0 && pnlarr[i - 1][j - 1].isFlagged()) howManyFlagged++;
+        if (j > 0 && i < n - 1 && pnlarr[i + 1][j - 1].isFlagged()) howManyFlagged++;
+        if (i > 0 && j < n - 1 && pnlarr[i - 1][j + 1].isFlagged()) howManyFlagged++;
+        // counts how many flags surrond the panel
+        
+        if (howManyFlagged == pnlarr[i][j].getNum())
+        {
+            if (j < n - 1 && !pnlarr[i][j + 1].isVisited())
+            {
+                if (pnlarr[i][j + 1].is_bomb())
+                    bombClickedActionPerformed(i, j + 1);
+                else
+                    panelClickedAtActionPerformed(i, j + 1);
+            }
+            if (i < n - 1 && !pnlarr[i + 1][j].isVisited())
+            {
+                if (pnlarr[i + 1][j].is_bomb())
+                    bombClickedActionPerformed(i + 1, j);
+                else
+                    panelClickedAtActionPerformed(i + 1, j);
+            }
+            if (j < n - 1 && i < n - 1 && !pnlarr[i + 1][j + 1].isVisited())
+            {
+                if (pnlarr[i + 1][j + 1].is_bomb())
+                    bombClickedActionPerformed(i + 1, j + 1);
+                else
+                    panelClickedAtActionPerformed(i + 1, j + 1);
+            }
+            if (j > 0 && !pnlarr[i][j - 1].isVisited()) 
+            {
+                if (pnlarr[i][j - 1].is_bomb())
+                    bombClickedActionPerformed(i, j - 1);
+                else
+                    panelClickedAtActionPerformed(i, j - 1);
+            }
+            if (i > 0 && !pnlarr[i - 1][j].isVisited()) 
+            {
+                if (pnlarr[i - 1][j].is_bomb())
+                    bombClickedActionPerformed(i - 1, j);
+                else
+                    panelClickedAtActionPerformed(i - 1, j);
+            }
+            if (j > 0 && i > 0 && !pnlarr[i - 1][j - 1].isVisited()) 
+            {
+                if (pnlarr[i - 1][j - 1].is_bomb())
+                    bombClickedActionPerformed(i - 1, j - 1);
+                else
+                    panelClickedAtActionPerformed(i - 1, j - 1);
+            }
+            if (j > 0 && i < n - 1 && !pnlarr[i + 1][j - 1].isVisited()) 
+            {
+                if (pnlarr[i + 1][j - 1].is_bomb())
+                    bombClickedActionPerformed(i + 1, j - 1);
+                else
+                    panelClickedAtActionPerformed(i + 1, j - 1);
+            }
+            if (i > 0 && j < n - 1 && !pnlarr[i - 1][j + 1].isVisited()) 
+            {
+                if (pnlarr[i - 1][j + 1].is_bomb())
+                    bombClickedActionPerformed(i - 1, j + 1);
+                else
+                    panelClickedAtActionPerformed(i - 1, j + 1);
+            }
+        } // clicks every surrounding panel if the number of surrounding flags equals the panel number
+        else
+        {
+            if (j < n - 1 && !pnlarr[i][j + 1].isFlagged()) 
+                pnlarr[i][j + 1].setBorder(BorderFactory.createLoweredBevelBorder());
+            if (i < n - 1 && !pnlarr[i + 1][j].isFlagged())
+                pnlarr[i + 1][j].setBorder(BorderFactory.createLoweredBevelBorder());
+            if (j < n - 1 && i < n - 1 && !pnlarr[i + 1][j + 1].isFlagged())
+                pnlarr[i + 1][j + 1].setBorder(BorderFactory.createLoweredBevelBorder());
+            if (j > 0 && !pnlarr[i][j - 1].isFlagged())
+                pnlarr[i][j - 1].setBorder(BorderFactory.createLoweredBevelBorder());
+            if (i > 0 && !pnlarr[i - 1][j].isFlagged())
+                pnlarr[i - 1][j].setBorder(BorderFactory.createLoweredBevelBorder());
+            if (j > 0 && i > 0 && !pnlarr[i - 1][j - 1].isFlagged())
+                pnlarr[i - 1][j - 1].setBorder(BorderFactory.createLoweredBevelBorder());
+            if (j > 0 && i < n - 1 && !pnlarr[i + 1][j - 1].isFlagged())
+                pnlarr[i + 1][j - 1].setBorder(BorderFactory.createLoweredBevelBorder());
+            if (i > 0 && j < n - 1 && !pnlarr[i - 1][j + 1].isFlagged())
+                pnlarr[i - 1][j + 1].setBorder(BorderFactory.createLoweredBevelBorder());
+        }
+    }
+    
+    private void unpressUnvisited()
+    {
+        int n = pnlarr.length;
+        for (int i = 0; i < n; ++i)
+        {
+            for (int j = 0; j < n; ++j)
+            {
+                if (!pnlarr[i][j].isVisited())
+                    pnlarr[i][j].setBorder(BorderFactory.createRaisedBevelBorder());
+            }
+        }
     }
     
     private boolean check_if_won()
@@ -323,12 +440,6 @@ public class Game extends javax.swing.JFrame {
             }
         }
         
-        ImageIcon flagImg = new ImageIcon("flag.png"); // load the image to a imageIcon
-        Image image = flagImg.getImage(); // transform it 
-        Image newimg = image.getScaledInstance(20, 20,
-                java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-        flagImg = new ImageIcon(newimg);  // transform it back
-        
         for (int i = 0; i < n; ++i)
         {
             for (int j = 0; j < n; ++j)
@@ -336,12 +447,16 @@ public class Game extends javax.swing.JFrame {
                 if (pnlarr[i][j].is_bomb() && !pnlarr[i][j].isFlagged())
                 {
                     pnlarr[i][j].getComponent(0).setVisible(true);
-                    ((javax.swing.JLabel)(pnlarr[i][j].getComponent(0))).setIcon(flagImg);
+                    ((javax.swing.JLabel)(pnlarr[i][j].getComponent(0))).setIcon(Images.FLAG);
                     ((javax.swing.JLabel)(pnlarr[i][j].getComponent(0))).setText("");
                     pnlarr[i][j].setFlagged(true);
                 }
             }
         }
+        ((javax.swing.JLabel)(pnlSmile.getComponent(0))).setIcon(Images.COOL_SMILE);
+        
+        pnlTimer.stop();
+        
         return true;
     }
     
@@ -352,4 +467,6 @@ public class Game extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
     private MyPanel[][] pnlarr;
     private javax.swing.JPanel pnlSmile;
+    private PanelTimer pnlTimer;
+    private javax.swing.JPanel pnlBombCount;
 }
