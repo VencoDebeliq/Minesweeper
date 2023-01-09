@@ -24,21 +24,13 @@ public class Game extends javax.swing.JFrame {
     public Game() {
         initComponents();
         setLocationRelativeTo(null);
+        init_size();
         init_arr();
+        smile_panel_init();
     }
     
     private void init_arr()
     {
-        try
-        {
-            int n = Integer.parseInt(JOptionPane.showInputDialog(this, "Hello", "Input grid size"));
-            pnlarr = new MyPanel[n][n];
-        }
-        catch (java.lang.NumberFormatException e)
-        {
-            JOptionPane.showMessageDialog(null, "Please input a number", "Incorrect input", JOptionPane.ERROR_MESSAGE);
-            init_arr();
-        }
         int n = pnlarr.length;
         
         Random rand = new Random();
@@ -106,7 +98,6 @@ public class Game extends javax.swing.JFrame {
                         }
                     }
                 });
-                
             }
         }
         
@@ -149,6 +140,61 @@ public class Game extends javax.swing.JFrame {
             }
         } // setting up field numbers
     }
+    
+    private void init_size()
+    {
+        try
+        {
+            int n = Integer.parseInt(JOptionPane.showInputDialog(this, "Hello", "Input grid size"));
+            pnlarr = new MyPanel[n][n];
+        }
+        catch (java.lang.NumberFormatException e)
+        {
+            JOptionPane.showMessageDialog(null, "Please input a number", "Incorrect input", JOptionPane.ERROR_MESSAGE);
+            init_size();
+        }
+    }
+    
+    private void smile_panel_init()
+    {
+        pnlSmile = new javax.swing.JPanel();
+        jPanel2.add(pnlSmile);
+        pnlSmile.setBounds((jPanel2.getWidth() - jPanel2.getHeight()) / 2, 5, jPanel2.getHeight() - 5, jPanel2.getHeight() - 10);
+        pnlSmile.setBorder(BorderFactory.createRaisedBevelBorder());
+        
+        ImageIcon smileImg = new ImageIcon("smiley_face.png"); // load the image to a imageIcon
+        Image image = smileImg.getImage(); // transform it 
+        Image newimg = image.getScaledInstance(50, 48,
+                java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        smileImg = new ImageIcon(newimg);  // transform it back
+        
+        ImageIcon unsmileImg = new ImageIcon("unsmiley_face.png"); // load the image to a imageIcon
+        image = unsmileImg.getImage(); // transform it 
+        newimg = image.getScaledInstance(50, 48,
+                java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        unsmileImg = new ImageIcon(newimg);  // transform it back
+        
+        javax.swing.JLabel lbl = new javax.swing.JLabel();
+        pnlSmile.add(lbl);
+        lbl.setIcon(smileImg);
+        lbl.setVisible(true);
+        final ImageIcon smile = smileImg;
+        final ImageIcon unsmile = unsmileImg;
+        pnlSmile.addMouseListener(new MouseAdapter(){
+            public void mousePressed(MouseEvent me1)
+            {
+                pnlSmile.setBorder(BorderFactory.createLoweredBevelBorder());
+                ((javax.swing.JLabel)(pnlSmile.getComponent(0))).setIcon(unsmile);
+                init_arr();
+            }
+            public void mouseReleased(MouseEvent me2)
+            {
+                pnlSmile.setBorder(BorderFactory.createRaisedBevelBorder());
+                ((javax.swing.JLabel)(pnlSmile.getComponent(0))).setIcon(smile);
+            }
+        });
+        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -160,35 +206,21 @@ public class Game extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        btnSmile = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
 
-        btnSmile.setText("RESTART");
-        btnSmile.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSmileActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(396, 396, 396)
-                .addComponent(btnSmile, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(447, Short.MAX_VALUE))
+            .addGap(0, 953, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnSmile, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
-                .addContainerGap())
+            .addGap(0, 63, Short.MAX_VALUE)
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
@@ -201,7 +233,7 @@ public class Game extends javax.swing.JFrame {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 506, Short.MAX_VALUE)
+            .addGap(0, 547, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -233,10 +265,6 @@ public class Game extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnSmileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSmileActionPerformed
-        init_arr();
-    }//GEN-LAST:event_btnSmileActionPerformed
 
     private void panelClickedAtActionPerformed(int i, int j)
     {
@@ -274,13 +302,19 @@ public class Game extends javax.swing.JFrame {
                 pnlarr[i][j].setBorder(BorderFactory.createLoweredBevelBorder());
             }
         }
+        ImageIcon unsmileImg = new ImageIcon("unsmiley_face.png"); // load the image to a imageIcon
+        Image image = unsmileImg.getImage(); // transform it 
+        Image newimg = image.getScaledInstance(50, 48,
+                java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        unsmileImg = new ImageIcon(newimg);  // transform it back
+        ((javax.swing.JLabel)(pnlSmile.getComponent(0))).setIcon(unsmileImg);
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnSmile;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     // End of variables declaration//GEN-END:variables
     private MyPanel[][] pnlarr;
+    private javax.swing.JPanel pnlSmile;
 }
