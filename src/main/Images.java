@@ -5,6 +5,7 @@
 package main;
 
 import java.awt.Image;
+import java.awt.Toolkit;
 import javax.swing.ImageIcon;
 
 /**
@@ -17,6 +18,7 @@ public class Images {
     public static ImageIcon UNSMILE = new ImageIcon("src//images//unsmiley_face.png");    
     public static ImageIcon BOMB = new ImageIcon("src//images//bomb.png");
     public static ImageIcon FLAG = new ImageIcon("src//images//flag.png");
+    public static Image GAME_LOGO = Toolkit.getDefaultToolkit().getImage("src//images//game_logo.png");
     
     static
     {

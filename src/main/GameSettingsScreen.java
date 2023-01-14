@@ -4,6 +4,8 @@
  */
 package main;
 
+import java.awt.Color;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -31,6 +33,7 @@ public class GameSettingsScreen extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(relTo);
         this.Game = Game;
+        setIconImage(Images.GAME_LOGO);
     }
 
     /**
@@ -273,11 +276,12 @@ public class GameSettingsScreen extends javax.swing.JFrame {
                     .addComponent(lblExpertW, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblExpertM, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(custom)
-                    .addComponent(txtCustomW, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtCustomH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtCustomM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtCustomW, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(custom)
+                        .addComponent(txtCustomH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtCustomM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -373,6 +377,7 @@ public class GameSettingsScreen extends javax.swing.JFrame {
             String s = "";
             try
             {
+                int h = height, w = width, m = mines;
                 s = txtCustomH.getText();
                 height = Integer.parseInt(s);
                 s = txtCustomW.getText();
@@ -381,10 +386,35 @@ public class GameSettingsScreen extends javax.swing.JFrame {
                 mines = Integer.parseInt(s);
                 if (height * width <= mines)
                 {
-                    JOptionPane.showMessageDialog(this, "Please enter compatible amount of mines", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
+                    JOptionPane.showMessageDialog(this, "Please enter compatible amount of mines", "Error", JOptionPane.ERROR_MESSAGE, new ImageIcon(Images.GAME_LOGO.getScaledInstance(50, 48,
+                java.awt.Image.SCALE_SMOOTH)));
+                    height = h;
+                    width = w;
+                    mines = m;
                 }
-                newGame();
+                else if (height > 24 && width > 44)
+                {
+                    JOptionPane.showMessageDialog(this, "Please enter smaller grid size", "", JOptionPane.INFORMATION_MESSAGE);
+                    height = h;
+                    width = w;
+                    mines = m;
+                }
+                else if (height > 24)
+                {
+                    JOptionPane.showMessageDialog(this, "Please enter smaller height size", "", JOptionPane.INFORMATION_MESSAGE);
+                    height = h;
+                    width = w;
+                    mines = m;
+                }
+                else if (width > 44)
+                {
+                    JOptionPane.showMessageDialog(this, "Please enter smaller width size", "", JOptionPane.INFORMATION_MESSAGE);
+                    height = h;
+                    width = w;
+                    mines = m;
+                }
+                else
+                    newGame();
             }
             catch (NumberFormatException e)
             {

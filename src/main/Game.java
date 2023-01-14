@@ -10,7 +10,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Random;
 import javax.swing.BorderFactory;
-import javax.swing.JOptionPane;
 /**
  *
  * @author Ventsislav Peychev
@@ -27,6 +26,7 @@ public class Game extends javax.swing.JFrame {
         init_arr();
         init_smile_panel();
         init_timer();
+        setIconImage(Images.GAME_LOGO);
     }
     
     private void init_arr()
@@ -218,6 +218,9 @@ public class Game extends javax.swing.JFrame {
         setUndecorated(true);
         setResizable(false);
 
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -231,6 +234,7 @@ public class Game extends javax.swing.JFrame {
             .addGap(0, 63, Short.MAX_VALUE)
         );
 
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -244,6 +248,7 @@ public class Game extends javax.swing.JFrame {
             .addGap(0, 615, Short.MAX_VALUE)
         );
 
+        btnGame.setBackground(new java.awt.Color(255, 255, 255));
         btnGame.setText("Game");
         btnGame.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -251,6 +256,7 @@ public class Game extends javax.swing.JFrame {
             }
         });
 
+        btnHelp.setBackground(new java.awt.Color(255, 255, 255));
         btnHelp.setText("Help");
         btnHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -258,6 +264,7 @@ public class Game extends javax.swing.JFrame {
             }
         });
 
+        btnExit.setBackground(new java.awt.Color(255, 255, 255));
         btnExit.setText("Exit");
         btnExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
