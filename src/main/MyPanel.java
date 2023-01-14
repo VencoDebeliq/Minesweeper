@@ -59,6 +59,7 @@ public class MyPanel extends javax.swing.JPanel {
         setVisited(false);
         setNum(0);
         setFlagged(false);
+        setBackground(new Color(204, 204, 204));
     }
     
     public void setForeground(int n)

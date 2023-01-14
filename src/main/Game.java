@@ -131,6 +131,7 @@ public class Game extends javax.swing.JFrame {
                     if (j > 0 && i < n - 1 && pnlarr[i + 1][j - 1].is_bomb()) num++;
                     if (i > 0 && j < m - 1 && pnlarr[i - 1][j + 1].is_bomb()) num++;
                     javax.swing.JLabel field = ((javax.swing.JLabel)pnlarr[i][j].getComponent(0));
+                    field.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
                     if (num != 0) field.setText(num + "");
                     pnlarr[i][j].setNum(num);
                 }
