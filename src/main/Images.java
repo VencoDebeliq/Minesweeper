@@ -12,11 +12,11 @@ import javax.swing.ImageIcon;
  * @author Ventsislav Peychev
  */
 public class Images {
-    public static ImageIcon COOL_SMILE = new ImageIcon("cool_smile.png"); // load the image to a imageIcon
-    public static ImageIcon SMILE = new ImageIcon("smiley_face.png");
-    public static ImageIcon UNSMILE = new ImageIcon("unsmiley_face.png");    
-    public static ImageIcon BOMB = new ImageIcon("bomb.png");
-    public static ImageIcon FLAG = new ImageIcon("flag.png");
+    public static ImageIcon COOL_SMILE = new ImageIcon("src//images//cool_smile.png"); // load the image to a imageIcon
+    public static ImageIcon SMILE = new ImageIcon("src//images//smiley_face.png");
+    public static ImageIcon UNSMILE = new ImageIcon("src//images//unsmiley_face.png");    
+    public static ImageIcon BOMB = new ImageIcon("src//images//bomb.png");
+    public static ImageIcon FLAG = new ImageIcon("src//images//flag.png");
     
     static
     {
