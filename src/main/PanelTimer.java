@@ -10,6 +10,10 @@ package main;
  */
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 public class PanelTimer extends javax.swing.JPanel {
@@ -18,7 +22,7 @@ public class PanelTimer extends javax.swing.JPanel {
     
     public PanelTimer() {
         javax.swing.JLabel label = new javax.swing.JLabel();
-        Font font = new Font("Times New Roman", Font.BOLD, 50);
+        Font font = new Font("Microsoft Sans Serif", Font.BOLD, 50);
         add(label);
         label.setText("0");
         label.setFont(font);

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package main;
+package screenes;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -10,6 +10,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Random;
 import javax.swing.BorderFactory;
+import javax.swing.JOptionPane;
+import main.Images;
+import main.MyPanel;
+import main.PanelTimer;
 /**
  *
  * @author Ventsislav Peychev
@@ -54,13 +58,19 @@ public class Game extends javax.swing.JFrame {
                 pnlarr[i][j].addMouseListener(new MouseAdapter(){
                     public void mousePressed(MouseEvent me)
                     {
-                        if (me.getButton() == me.BUTTON1)
+                        if ((me.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) != 0
+                                && (me.getModifiersEx() & MouseEvent.BUTTON3_DOWN_MASK) != 0
+                                || me.getButton() == MouseEvent.BUTTON2)
                         {
                             if (pnlarr[kpi][kpj].isVisited()) 
                             {
                                 clickSurrounding(kpi, kpj);
                                 return;
                             }
+                        }
+                        else if (me.getButton() == me.BUTTON1)
+                        {
+                            if (pnlarr[kpi][kpj].isVisited()) return;
                             pnlTimer.start();
                             if (!pnlarr[kpi][kpj].is_bomb())
                                 panelClickedAtActionPerformed(kpi, kpj);
@@ -86,10 +96,6 @@ public class Game extends javax.swing.JFrame {
                             pnlarr[kpi][kpj].setFlagged(true);
                             int c = Integer.parseInt(((javax.swing.JLabel)(pnlBombCount.getComponent(0))).getText()) - 1;
                             ((javax.swing.JLabel)(pnlBombCount.getComponent(0))).setText(Integer.toString(c));
-                        }
-                        else if (me.getButton() == me.BUTTON2)
-                        {
-                            System.out.println("in");
                         }
                     }
                     public void mouseReleased(MouseEvent re)
@@ -131,7 +137,7 @@ public class Game extends javax.swing.JFrame {
                     if (j > 0 && i < n - 1 && pnlarr[i + 1][j - 1].is_bomb()) num++;
                     if (i > 0 && j < m - 1 && pnlarr[i - 1][j + 1].is_bomb()) num++;
                     javax.swing.JLabel field = ((javax.swing.JLabel)pnlarr[i][j].getComponent(0));
-                    field.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
+                    field.setFont(new Font("MS Sans Serif", Font.BOLD, 12));
                     if (num != 0) field.setText(num + "");
                     pnlarr[i][j].setNum(num);
                 }
@@ -193,7 +199,7 @@ public class Game extends javax.swing.JFrame {
         pnlBombCount.setBackground(Color.pink);
         pnlBombCount.setBorder(BorderFactory.createLineBorder(Color.black));
         javax.swing.JLabel lbl = new javax.swing.JLabel();
-        lbl.setFont(new Font("Times New Roman", Font.BOLD, 50));
+        lbl.setFont(new Font("Microsoft Sans Serif", Font.BOLD, 50));
         lbl.setForeground(Color.red);
         pnlBombCount.add(lbl);
     }
@@ -211,7 +217,7 @@ public class Game extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         btnGame = new javax.swing.JButton();
-        btnHelp = new javax.swing.JButton();
+        btnControls = new javax.swing.JButton();
         btnExit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -256,11 +262,11 @@ public class Game extends javax.swing.JFrame {
             }
         });
 
-        btnHelp.setBackground(new java.awt.Color(255, 255, 255));
-        btnHelp.setText("Help");
-        btnHelp.addActionListener(new java.awt.event.ActionListener() {
+        btnControls.setBackground(new java.awt.Color(255, 255, 255));
+        btnControls.setText("Controls");
+        btnControls.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnHelpActionPerformed(evt);
+                btnControlsActionPerformed(evt);
             }
         });
 
@@ -280,7 +286,7 @@ public class Game extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(btnGame)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnHelp)
+                .addComponent(btnControls)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnExit))
             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -290,7 +296,7 @@ public class Game extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGame)
-                    .addComponent(btnHelp)
+                    .addComponent(btnControls)
                     .addComponent(btnExit))
                 .addGap(1, 1, 1)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -317,9 +323,14 @@ public class Game extends javax.swing.JFrame {
         new GameSettingsScreen(jPanel2, this).setVisible(true);
     }//GEN-LAST:event_btnGameActionPerformed
 
-    private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHelpActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnHelpActionPerformed
+    private void btnControlsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnControlsActionPerformed
+        JOptionPane.showMessageDialog(pnlSmile,
+            "Left-click an empty square to reveal it.\n" +
+            "Right-click an empty square to flag it.\n" +
+            "Midde-click (or left+right click) a number to reveal\n" +
+            "its adjacent squares.\n",
+            "Controls", JOptionPane.PLAIN_MESSAGE);
+    }//GEN-LAST:event_btnControlsActionPerformed
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
         dispose();
@@ -514,9 +525,9 @@ public class Game extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnControls;
     private javax.swing.JButton btnExit;
     private javax.swing.JButton btnGame;
-    private javax.swing.JButton btnHelp;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

@@ -4,6 +4,8 @@
  */
 package main;
 
+import screenes.*;
+
 /**
  *
  * @author Ventsislav Peychev

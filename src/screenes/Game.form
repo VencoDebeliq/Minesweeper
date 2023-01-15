@@ -49,7 +49,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="btnGame" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="btnHelp" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnControls" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="btnExit" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -61,7 +61,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnGame" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnHelp" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnControls" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnExit" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
@@ -135,15 +135,15 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGameActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btnHelp">
+        <Component class="javax.swing.JButton" name="btnControls">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Help"/>
+            <Property name="text" type="java.lang.String" value="Controls"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnHelpActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnControlsActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnExit">
